@@ -1,0 +1,126 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+import cairo
+get_ipython().run_line_magic('matplotlib', 'inline')
+import matplotlib.pyplot as plt
+from random import uniform, seed
+import random
+import numpy as np
+import time
+from igraph import *
+from igraph import Graph
+print("Modules Imported")
+print("Independent Cascade Example")
+def ic(G,s):
+print(s)
+jst_inf=list(s)
+infected=list(s)
+while(1):
+print(jst_inf, infected)
+if len(jst_inf)==0:
+return infected
+tmp=[]
+for each in jst_inf:
+for each1 in G.neighbors(each):
+r=random.uniform(0,1)
+if r<0.5 and each1 not in infected and each1 not in tmp:
+tmp.append(each1)
+for each in tmp:
+infected.append(each)
+jst_inf=list(tmp)
+G=nx.Graph()
+G.add_edges_from([(1,2), (3,11), (2,9), (4,5), (5,6), (5,7), (5,8), (5,9), (5,10), (10, 11), (10,13), (11,13),
+(12,14), (12,15), (13,14), (13,15), (13,16), (13,17), (14, 15), (14, 16), (15,16)])
+seed=[5,9]
+list1=ic(G,seed)
+def Independent_Cascade(g,S,p=0.5,mon=1000):
+sp = []
+for i in range(mon):
+new, X = S[:], S[:]
+while new:
+new_nodes = []
+for j in new:
+np.random.seed(i)
+success = np.random.uniform(0,1,len(g.neighbors(j,mode="out"))) < p
+new_nodes += list(np.extract(success, g.neighbors(j,mode="out")))
+new = list(set(new_nodes) - set(X))
+X += new
+sp.append(len(X))
+return(np.mean(sp))
+print("Independent Cascade Done")
+def greedy(g,k,p=0.1,mon=1000):
+S, sp, t, start = [], [], [], time.time()
+for _ in range(k):
+best = 0
+for j in set(range(g.vcount()))-set(S):
+s = Independent_Cascade(g,S + [j],p,mon)
+if s > best:
+best, n = s, j
+S.append(n)
+sp.append(best)
+t.append(time.time() - start)
+return(S,sp,t)
+print("Greedy Done")
+def celf(g,k,p=0.1,mon=1000):
+start = time.time()
+mg = [Independent_Cascade(g,[n],p,mon) for n in range(g.vcount())]
+Q = sorted(zip(range(g.vcount()),mg), key=lambda x: x[1],reverse=True)
+S, sp, SP = [Q[0][0]], Q[0][1], [Q[0][1]]
+Q, l, t = Q[1:], [g.vcount()], [time.time()-start]
+for _ in range(k-1):
+ch, nodech = False, 0
+while not ch:
+nodech += 1
+cur = Q[0][0]
+Q[0] = (cur,Independent_Cascade(g,S+[cur],p,mon) - sp)
+Q = sorted(Q, key = lambda x: x[1], reverse = True)
+ch = (Q[0][0] == cur)
+sp += Q[0][1]
+S.append(Q[0][0])
+SP.append(sp)
+l.append(nodech)
+t.append(time.time() - start)
+Q = Q[1:]
+return(S,SP,t,l)
+print("CELF Done")
+start = [0,0,0,0,0,0,0,1,1,1,1,1,1,2,3,4,5,6,5]
+end = [2,3,4,5,6,7,8,2,3,4,5,7,8,6,7,8,9,7,4]
+g = Graph(directed=True)
+g.add_vertices(range(10))
+g.add_edges(zip(start,end))
+print('Number of vertices:', g.vcount())
+print('Number of edges:', g.ecount())
+print('Number of neighbors: ', g.neighbors(2, mode='out'))
+g.get_adjlist()
+g.vs["label"], g.es["color"], g.vs["color"] = range(10), "
+plot(g,bbox = (200,200),margin = 20,layout = g.layout("kk"))
+celf_final = celf(g,3,p = 0.5,mon = 1020)
+greedy_final = greedy(g,3,p = 0.5,mon = 1020)
+print("Celf Algorithm:")
+print(celf_final)
+print("Greedy Algorithm:")
+print(greedy_final)
+G = Graph.Erdos_Renyi(n=150,m=270,directed=True)
+G.es["color"], G.vs["color"], G.vs["label"] = "
+plot(G, bbox = (300, 300),margin = 15,layout = G.layout("kk"))
+celf_final = celf(G,6,p = 0.5,mon = 1020)
+greedy_final = greedy(G,6,p = 0.5,mon = 1020)
+print("Celf Algorithm: " + str(celf_final[0]))
+print("Greedy Algorithm: " + str(greedy_final[0]))
+plt.rcParams['figure.figsize'] = (10,10)
+plt.rcParams['lines.linewidth'] = 5
+plt.plot(range(1,len(greedy_final[2])+1),greedy_final[2],label="GREEDY",color="
+plt.plot(range(1,len(celf_final[2])+1),celf_final[2],label="CELF",color="
+plt.ylabel('Computation Time (in seconds)'); plt.xlabel('Seed Set Size')
+plt.title('Time Analysis'); plt.legend(loc=2);
+start = [0,0,0,0,0,0,0,1,1,1,1,1,1,2,3,4,5,6,5]
+end = [2,3,4,5,6,7,8,2,3,4,5,7,8,6,7,8,9,7,4]
+g = Graph(directed=True)
+g.add_vertices(range(10))
+g.add_edges(zip(start,end))
+print('Number of vertices:', g.vcount())
+print('Number of edges:', g.ecount())
+print('Number of neighbors: ', g.neighbors(2, mode='out'))
+g.get_adjlist()
+g.vs["label"], g.es["color"], g.vs["color"] = range(10), "
+plot(g,bbox = (200,200),margin = 20,layout = g.layout("kk"))
