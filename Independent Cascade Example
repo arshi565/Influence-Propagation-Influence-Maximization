@@ -1,0 +1,3 @@
+print("Independent Cascade Example") defic(G,s): print(s) jst_inf=list(s) infected=list(s) while(1): print(jst_inf, infected) iflen(jst_inf)==0: returninfected tmp=[] foreachinjst_inf: foreach1inG.neighbors(each): r=random.uniform(0,1) ifr<0.5andeach1notininfectedandeach1notintmp: tmp.append(each1) foreachintmp: infected.append(each) jst_inf=list(tmp)
+G=nx.Graph() G.add_edges_from([(1,2),(3,11),(2,9),(4,5),(5,6),(5,7),(5,8),(5,9),(5,10),(10,11),(10,13),(11,13), (12,14),(12,15),(13,14),(13,15),(13,16),(13,17),(14,15),(14,16),(15,16)])
+seed=[5,9] list1=ic(G,seed)
